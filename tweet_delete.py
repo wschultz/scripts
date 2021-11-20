@@ -9,11 +9,14 @@ test_mode = False
 verbose = True
 delete_tweets = True
 delete_favs = True
-days_to_keep = 1
+days_to_keep = 2
  
 tweets_to_save = [
-    573245340398170114, # keybase proof
-    573395137637662721, # a tweet to this very post
+    1458050222270160908, # Horsepaste
+    1458055813319249922, # Juanita followed me
+    1458153342887243782, # Kyle did nothing wrong, got me banned!
+    1461760868677529601, # Kyle acquitted, WTF Twitter?!
+    1458405313569243142, # Emerald Robinson
 ]
 favs_to_save = [
     362469775730946048, # tony this is icac
