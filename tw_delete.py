@@ -11,7 +11,7 @@ api = twitter.Api(consumer_key=os.environ.get('CONSUMER_KEY'),
                   access_token_secret=os.environ.get('ACCESS_TOKEN_SECRET'))
 
 # Change these variables here
-days_ago = 4                 # How many days do we keep?
+days_ago = 3                 # How many days do we keep?
 screen_name = "vileTexan"    # What's your twitter handle?
 
 # What are the Tweet IDs you don't want to delete?
@@ -29,9 +29,9 @@ while len(tweets) > 1:
       print(tweet.id, tweet.text)
       api.DestroyStatus(status_id=tweet.id)
 
-    max_id = tweet.id
+  max_id = tweet.id
 
-  tweets = api.GetUserTimeline(screen_name="vileTexan", count=200, include_rts=True, max_id=max_id)
+  tweets = api.GetUserTimeline(screen_name=screen_name, count=200, include_rts=True, max_id=max_id)
 
   if len(tweets) == 1:
     api.DestroyStatus(status_id=tweet.id)
