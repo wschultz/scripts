@@ -2,7 +2,7 @@
  
 import os
 import twitter
-from time import time
+import time
 
 # Create an Api instance.
 api = twitter.Api(consumer_key=os.environ.get('CONSUMER_KEY'),
@@ -15,13 +15,15 @@ days_ago         = 3           # How many days do we keep?
 screen_name      = "vileTexan" # What's your twitter handle?
 delete_tweets    = True        # True/False... If True, delete Tweets
 delete_favorites = True        # True/False... If True, delete Favorites
+delete_lists     = True        # True/False... If True, delete Lists people have put you on
 
 # What are the Tweet IDs you don't want to delete?
 safe_ids = [
   1638218044877971470,
+  1651954469511352320,
 ]
 
-cutoff = int(time()) - (days_ago * 24 * 60 * 60)
+cutoff = int(time.time()) - (days_ago * 24 * 60 * 60)
 max_id = 0
 
 def DeleteTweets(cutoff):
@@ -71,9 +73,25 @@ def DeleteFavorites(cutoff):
     for i in err.message:
       print(i)
 
+def DeleteLists():
+  lists = api.GetMemberships(screen_name=screen_name, count=1000)
+
+  try:
+    for i in lists:
+      api.CreateBlock(user_id=i.user.id)
+      time.sleep(1)
+      api.DestroyBlock(user_id=i.user.id)
+
+  except Exception as err:
+    print(err.message)
+    for i in err.message:
+      print(i)
+
 if __name__ == "__main__":
   if delete_tweets == True:
     DeleteTweets(cutoff)
   if delete_favorites == True:
     DeleteFavorites(cutoff)
+  if delete_lists == True:
+    DeleteLists()
 
