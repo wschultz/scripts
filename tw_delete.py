@@ -20,7 +20,10 @@ delete_lists     = True        # True/False... If True, delete Lists people have
 # What are the Tweet IDs you don't want to delete?
 safe_ids = [
   1638218044877971470,
+  1653730123865104384,
+  1653225476335255552,
   1651954469511352320,
+  1653512857214959619, # Mercy's list
 ]
 
 cutoff = int(time.time()) - (days_ago * 24 * 60 * 60)
@@ -33,7 +36,7 @@ def DeleteTweets(cutoff):
     while len(tweets) > 1:
       for tweet in tweets:
         if tweet.created_at_in_seconds < cutoff and tweet.id not in safe_ids:
-          print(tweet.id, tweet.created_at, tweet.text)
+          print("Deleting tweet: " + tweet.id, tweet.created_at, tweet.text)
           api.DestroyStatus(status_id=tweet.id)
 
       max_id = tweet.id
@@ -57,7 +60,7 @@ def DeleteFavorites(cutoff):
     while len(favs) > 1:
       for fav in favs:
         if fav.created_at_in_seconds < cutoff:
-          print(fav.id, fav.created_at, fav.text)
+          print("Deleting Fav: ", fav.id, fav.created_at, fav.text)
           api.DestroyFavorite(status_id=fav.id)
 
       max_id = fav.id
@@ -78,9 +81,11 @@ def DeleteLists():
 
   try:
     for i in lists:
-      api.CreateBlock(user_id=i.user.id)
-      time.sleep(1)
-      api.DestroyBlock(user_id=i.user.id)
+      if i.id not in safe_ids:
+        print("Deleting List: " + i.id)
+        api.CreateBlock(user_id=i.user.id)
+        time.sleep(1)
+        api.DestroyBlock(user_id=i.user.id)
 
   except Exception as err:
     print(err.message)
