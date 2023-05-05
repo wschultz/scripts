@@ -82,7 +82,7 @@ def DeleteLists():
   try:
     for i in lists:
       if i.id not in safe_ids:
-        print("Deleting List: " + i.id)
+        print("Deleting List: ", i.id)
         api.CreateBlock(user_id=i.user.id)
         time.sleep(1)
         api.DestroyBlock(user_id=i.user.id)
