@@ -36,7 +36,7 @@ def DeleteTweets(cutoff):
     while len(tweets) > 1:
       for tweet in tweets:
         if tweet.created_at_in_seconds < cutoff and tweet.id not in safe_ids:
-          print("Deleting tweet: " + tweet.id, tweet.created_at, tweet.text)
+          print("Deleting tweet: ", tweet.id, tweet.created_at, tweet.text)
           api.DestroyStatus(status_id=tweet.id)
 
       max_id = tweet.id
