@@ -1,8 +1,11 @@
 #!/usr/bin/env python
  
+#!/usr/bin/env python
+
 import os
 import twitter
 import time
+import threading
 
 # Create an Api instance.
 api = twitter.Api(consumer_key=os.environ.get('CONSUMER_KEY'),
@@ -29,7 +32,7 @@ safe_ids = [
 cutoff = int(time.time()) - (days_ago * 24 * 60 * 60)
 max_id = 0
 
-def DeleteTweets(cutoff):
+def delete_tweets(cutoff):
   tweets = api.GetUserTimeline(screen_name=screen_name, count=200, include_rts=True) 
 
   try:
@@ -53,7 +56,7 @@ def DeleteTweets(cutoff):
       print(i)
 
 
-def DeleteFavorites(cutoff):
+def delete_favorites(cutoff):
   favs = api.GetFavorites(screen_name=screen_name, count=200)
 
   try:
@@ -76,7 +79,7 @@ def DeleteFavorites(cutoff):
     for i in err.message:
       print(i)
 
-def DeleteLists():
+def delete_lists():
   lists = api.GetMemberships(screen_name=screen_name, count=1000)
 
   try:
@@ -93,10 +96,22 @@ def DeleteLists():
       print(i)
 
 if __name__ == "__main__":
-  if delete_tweets == True:
-    DeleteTweets(cutoff)
-  if delete_favorites == True:
-    DeleteFavorites(cutoff)
-  if delete_lists == True:
-    DeleteLists()
+  if delete_tweets:
+    thread_tweets = threading.Thread(target=delete_tweets, args=(cutoff,))
+    thread_tweets.start()
+  if delete_favorites:
+    thread_favorites = threading.Thread(target=delete_favorites, args=(cutoff,))
+    thread_favorites.start()
+  if delete_lists:
+    thread_lists = threading.Thread(target=delete_lists)
+    thread_lists.start()
+
+  if delete_tweets:
+    thread_tweets.join()
+  if delete_favorites:
+    thread_favorites.join()
+  if delete_lists:
+    thread_lists.join()
+
+  print("Done.")
 
